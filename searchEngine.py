@@ -1,8 +1,17 @@
 from elasticsearch import Elasticsearch
 import json
+from nltk.corpus import wordnet
+import nltk
+# nltk.download('wordnet')
+
+
+synset = wordnet.synsets("Travel")
+print(synset[0].lemmas()[0].name())
+
 
 es = Elasticsearch(HOST="http://localhost", PORT=9200)
 es = Elasticsearch()
+
 
 def docIndexing():
     doc_id = 0
@@ -15,16 +24,17 @@ def docIndexing():
 docIndexing()
 
 
-
-body={
+query15={
     "from": 0,
     "size": 500,
     "query": {
-        "match": {
-            "content": "trump"
+        "query_string": {
+            "query": "london AND article AND country AND story AND claims"
         }
     }
 }
 
-res = es.search(index="news", body=body)
-print(res)
+res = es.search(index="news", body=query15)
+
+for hit in res['hits']['hits']:
+    print(hit["_source"])
