@@ -66,4 +66,13 @@ for query in queries:
 
     print("-----------------------------------------")
     for hit in res['hits']['hits']:
-        print(hit["_source"])
+        print(hit["_source"]);
+        #------------------------MAMAD OUTPUT-------------------
+     with open('ouput.txt' ,"a", encoding="utf-8") as data:
+        res = es.search(index="news", body=query)
+        i = 0;
+        for hit in res['hits']['hits']:
+              data.write(listToString(hit["_source"]['content'])+"\n")
+              i = i+1
+        data.write("--------------------------------------------------------------------------"+"\n")
+        print(i)
