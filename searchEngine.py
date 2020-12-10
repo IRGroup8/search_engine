@@ -67,11 +67,11 @@ def make_query(args):
 
 
 queries = [["election"], ["iran"], ["vote"], ["USA", "trump"], ["facebook", "iran"],
-           ["Prime", "Minister"], ["election", "trump", "biden"], ["facebook", "iran", "president"],
-           ["NYC", "Manhattan", "june"], ["USA", "trump", "biden", "November"],
+           ["Prime", "Minister"], ["election", "trump", "biden"], ["facebook", "iran", "twitter"],
+           ["NYC", "Manhattan", "june"], ["election", "trump", "biden", "November"],
            ["trump", "biden", "us", "president"], ["August", "people", "food", "health"],
            ["election", "trump", "biden", "November", "Twitter"], ["facebook", "twitter", "social", "people", "world"],
-           ["london", "article", "country", "story", "claims"]]
+           ["new", "the", "country", "virus", "if"]]
 
 # A sample of the query which was made: {'from': 0, 'size': 500, 'query': {'query_string': {'query': 'london OR (
 # London OR Greater_London OR British_capital OR capital_of_the_United_Kingdom OR London OR Jack_London OR
