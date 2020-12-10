@@ -2,6 +2,8 @@ from elasticsearch import Elasticsearch
 import json
 from nltk.corpus import wordnet
 import nltk
+import os
+import errno
 
 # nltk.download('wordnet')
 
@@ -82,8 +84,9 @@ queries = [["election"], ["iran"], ["vote"], ["USA", "trump"], ["facebook", "ira
 # arrogate OR claim OR claim OR take OR claim OR take OR exact)'}}}
 
 # ------------------------MAMAD OUTPUT-------------------
-with open('newOutput.json', 'w') as file:
-    for query in queries:
+for query in queries:
+    title = list_to_string(query)+'.json'
+    with open(title, 'w') as file:
         res = es.search(index="new", body=make_query(query))
         file.write("Query for %s :\n" % str(query))
         for hit in res['hits']['hits']:
@@ -92,8 +95,9 @@ with open('newOutput.json', 'w') as file:
             file.write('\n')
         file.write('\n\n')
 
-with open('newOutput.json', 'w') as file:
-    for query in queries:
+for query in queries:
+    title = list_to_string(query)+'_without_wordNet.json'
+    with open(title, 'w') as file:
         res = es.search(index="new", body=make_query_without(query))
         file.write("Query for %s :\n" % str(query))
         for hit in res['hits']['hits']:
@@ -101,4 +105,23 @@ with open('newOutput.json', 'w') as file:
             json.dump(hit["_source"], file)
             file.write('\n')
         file.write('\n\n')
-
+# with open('newOutput.json', 'w') as file:
+#     for query in queries:
+#         res = es.search(index="new", body=make_query(query))
+#         file.write("Query for %s :\n" % str(query))
+#         for hit in res['hits']['hits']:
+#             hit["_source"]['score'] = hit["_score"]
+#             json.dump(hit["_source"], file)
+#             file.write('\n')
+#         file.write('\n\n')
+#
+# with open('newOutput_without_wordNet.json', 'w') as file:
+#     for query in queries:
+#         res = es.search(index="new", body=make_query_without(query))
+#         file.write("Query for %s :\n" % str(query))
+#         for hit in res['hits']['hits']:
+#             hit["_source"]['score'] = hit["_score"]
+#             json.dump(hit["_source"], file)
+#             file.write('\n')
+#         file.write('\n\n')
+#
