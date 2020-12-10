@@ -60,15 +60,15 @@ def make_query(args):
             str_q += ")"
         str_q += " AND "
 
-    query = {"from": 0, "size": 500, "query": {"query_string": {"query": str_q[:-5]}}}
+    query = {"from": 0, "size": 10, "query": {"query_string": {"query": str_q[:-5]}}}
     return query
 
 
-queries = [["USA"], ["iran"], ["vote"], ["USA", "trump"], ["facebook", "iran"],
-           ["Prime", "Minister"], ["USA", "trump", "biden"], ["facebook", "iran", "president"],
+queries = [["election"], ["iran"], ["vote"], ["USA", "trump"], ["facebook", "iran"],
+           ["Prime", "Minister"], ["election", "trump", "biden"], ["facebook", "iran", "president"],
            ["NYC", "Manhattan", "june"], ["USA", "trump", "biden", "November"],
            ["trump", "biden", "us", "president"], ["August", "people", "food", "health"],
-           ["USA", "trump", "biden", "November", "Twitter"], ["facebook", "twitter", "social", "people", "world"],
+           ["election", "trump", "biden", "November", "Twitter"], ["facebook", "twitter", "social", "people", "world"],
            ["london", "article", "country", "story", "claims"]]
 
 # A sample of the query which was made: {'from': 0, 'size': 500, 'query': {'query_string': {'query': 'london OR (
@@ -91,3 +91,14 @@ with open('newOutput.json', 'w') as file:
             json.dump(hit["_source"], file)
             file.write('\n')
         file.write('\n\n')
+
+with open('newOutput.json', 'w') as file:
+    for query in queries:
+        res = es.search(index="new", body=make_query_without(query))
+        file.write("Query for %s :\n" % str(query))
+        for hit in res['hits']['hits']:
+            hit["_source"]['score'] = hit["_score"]
+            json.dump(hit["_source"], file)
+            file.write('\n')
+        file.write('\n\n')
+
