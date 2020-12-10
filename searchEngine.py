@@ -10,14 +10,15 @@ es = Elasticsearch(HOST="http://localhost", PORT=9200)
 es = Elasticsearch()
 
 
-# def docIndexing():
-#     doc_id = 0
-#     with open('output.json') as json_file:
-#         for line in json_file:
-#             doc = json.loads(line[0:len(line)-2])
-#             es.index(index="news", doc_type="content", id=doc_id, body=doc)
-#             doc_id = doc_id + 1
-#
+def docIndexing():
+    doc_id = 0
+    with open('output.json') as json_file:
+        for line in json_file:
+            doc = json.loads(line[0:len(line) - 2])
+            es.index(index="new", doc_type="content", id=doc_id, body=doc)
+            doc_id = doc_id + 1
+
+
 # docIndexing()
 
 
@@ -36,6 +37,16 @@ def list_to_string(arr):
         str1 += ele
         str1 += " OR "
     return str1[:-4]
+
+
+# make query without wordnet
+def make_query_without(args):
+    str_q = ""
+    for arg in args:
+        str_q += arg
+        str_q += " AND "
+    query = {"from": 0, "size": 10, "query": {"query_string": {"query": str_q[:-5]}}}
+    return query
 
 
 def make_query(args):
@@ -73,9 +84,10 @@ queries = [["USA"], ["iran"], ["vote"], ["USA", "trump"], ["facebook", "iran"],
 # ------------------------MAMAD OUTPUT-------------------
 with open('newOutput.json', 'w') as file:
     for query in queries:
-        res = es.search(index="news", body=make_query(query))
+        res = es.search(index="new", body=make_query(query))
         file.write("Query for %s :\n" % str(query))
         for hit in res['hits']['hits']:
+            hit["_source"]['score'] = hit["_score"]
             json.dump(hit["_source"], file)
             file.write('\n')
         file.write('\n\n')
